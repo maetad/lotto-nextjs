@@ -6,8 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
+import { PaginateTicketDto } from './dto/paginate-ticket.dto';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 
@@ -21,8 +23,10 @@ export class TicketController {
   }
 
   @Get()
-  findAll() {
-    return this.ticketService.findAll();
+  findAll(@Query() query: PaginateTicketDto) {
+    query.limit = query.limit > 100 ? 100 : query.limit;
+
+    return this.ticketService.paginate(query);
   }
 
   @Get(':id')
